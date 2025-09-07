@@ -19,6 +19,16 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      # Get GitHub OIDC ID Token
+      - name: Get ID Token
+        id: idtoken
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const core = require('@actions/core');
+            return await core.getIDToken();
+          result-encoding: string
+
       # Deploy the static site
       - name: Deploy Static Site to Azure
         uses: Azure/static-web-apps-deploy@v1
@@ -28,4 +38,4 @@ jobs:
           api_location: ""           # No API
           output_location: "/"       # Static files location
           skip_app_build: true       # Skip building, files already static
-          github_id_token: ${{ github.token }}
+          github_id_token: ${{ steps.idtoken.outputs.result }}
