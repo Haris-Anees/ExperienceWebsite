@@ -19,17 +19,14 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      # Get GitHub OIDC ID Token
-      - name: Get ID Token
+      # Get GitHub OIDC token
+      - name: Get GitHub ID Token
         id: idtoken
         uses: actions/github-script@v6
         with:
-          script: |
-            const core = require('@actions/core');
-            return await core.getIDToken();
-          result-encoding: string
+          script: return await github.actions.getIDToken();
 
-      # Deploy the static site
+      # Deploy static site
       - name: Deploy Static Site to Azure
         uses: Azure/static-web-apps-deploy@v1
         with:
